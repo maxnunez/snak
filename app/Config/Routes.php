@@ -5,3 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
 $routes->get('health', 'Health::index');
+
+$routes->get('login', 'AuthController::showLogin');
+$routes->post('login', 'AuthController::login');
+$routes->post('logout', 'AuthController::logout');

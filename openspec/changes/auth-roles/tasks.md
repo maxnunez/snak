@@ -55,15 +55,15 @@ Chain strategy: stacked-to-main
 
 ## Group 2a — `feat(auth): add staff login and logout` (PR 2)
 
-- [ ] 2a.1 RED `tests/feature/AuthTest.php::testLoginRegeneratesSessionUpdatesLastLoginAndRedirects` + new `tests/_support/AuthTestTrait.php` (`continueSession`, `postWithCsrf`) → GREEN `AuthService::attempt()`, `app/Controllers/AuthController.php`, `app/Views/auth/login.php`, `app/Language/es/Auth.php`, `app/Config/Session.php` `regenerateDestroy = true`. PROOF: `--filter AuthTest`.
-- [ ] 2a.2 RED `AuthTest::testWrongPasswordShowsGenericAlertAndNoSession` → GREEN flash `Auth.loginFailed` + SweetAlert2 in `pageScripts`. PROOF: filter.
-- [ ] 2a.3 RED `AuthTest::testUnknownUserMatchesWrongPasswordStatusAndMessage` → GREEN `dummyHash()` fallback. PROOF: filter.
-- [ ] 2a.4 RED `AuthTest::testInactiveUserRefusedWithGenericMessage` → GREEN `(int) $user->is_active !== 1`. PROOF: filter.
-- [ ] 2a.5 RED `AuthTest::testLogoutDestroysSessionAndRejectsReplay` → GREEN `AuthController::logout` + `POST logout`; explicit `remove()` then `destroy()`. PROOF: filter.
-- [ ] 2a.6 RED `AuthTest::testMissingCsrfTokenThrowsOnPostLogin` + `::testInvalidCsrfTokenThrows` → GREEN `app/Config/Filters.php` globals `before => ['csrf']`. PROOF: filter.
-- [ ] 2a.7 RED `AuthTest::testIntendedUrlRestoredAfterLogin` → GREEN `pullIntendedUrl()` (`/` prefix, rejects `//`). PROOF: filter.
-- [ ] 2a.8 RED `AuthTest::testLoginPageRendersSweetAlertAssetsAndNoDataTableCall` → GREEN login view `section('pageScripts')` (app-bootstrap delta: SweetAlert2 used, DataTables still unused). PROOF: filter.
-- [ ] 2a.9 Config-only: `.env.example` document `cookie.secure` dev/prod. PROOF: `grep -n cookie.secure .env.example`.
+- [x] 2a.1 RED `tests/feature/AuthTest.php::testLoginRegeneratesSessionUpdatesLastLoginAndRedirects` + new `tests/_support/AuthTestTrait.php` (`continueSession`, `postWithCsrf`) → GREEN `AuthService::attempt()`, `app/Controllers/AuthController.php`, `app/Views/auth/login.php`, `app/Language/es/Auth.php`, `app/Config/Session.php` `regenerateDestroy = true`. PROOF: `--filter AuthTest`.
+- [x] 2a.2 RED `AuthTest::testWrongPasswordShowsGenericAlertAndNoSession` → GREEN flash `Auth.loginFailed` + SweetAlert2 in `pageScripts`. PROOF: filter.
+- [x] 2a.3 RED `AuthTest::testUnknownUserMatchesWrongPasswordStatusAndMessage` → GREEN `dummyHash()` fallback. PROOF: filter.
+- [x] 2a.4 RED `AuthTest::testInactiveUserRefusedWithGenericMessage` → GREEN `(int) $user->is_active !== 1`. PROOF: filter.
+- [x] 2a.5 RED `AuthTest::testLogoutDestroysSessionAndRejectsReplay` → GREEN `AuthController::logout` + `POST logout`; explicit `remove()` then `destroy()`. PROOF: filter.
+- [x] 2a.6 RED `AuthTest::testMissingCsrfTokenThrowsOnPostLogin` + `::testInvalidCsrfTokenThrows` → GREEN `app/Config/Filters.php` globals `before => ['csrf']`. PROOF: filter.
+- [x] 2a.7 RED `AuthTest::testIntendedUrlRestoredAfterLogin` → GREEN `pullIntendedUrl()` (`/` prefix, rejects `//`). PROOF: filter.
+- [x] 2a.8 RED `AuthTest::testLoginPageRendersSweetAlertAssetsAndNoDataTableCall` → GREEN login view `section('pageScripts')` (app-bootstrap delta: SweetAlert2 used, DataTables still unused). PROOF: filter.
+- [x] 2a.9 Config-only: `.env.example` document `cookie.secure` dev/prod. PROOF: `grep -n cookie.secure .env.example`.
 
 ## Group 2b — `feat(auth): throttle failed logins` (PR 2)
 

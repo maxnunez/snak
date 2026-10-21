@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Exceptions\ValidationException;
 use App\Models\UserModel;
+use CodeIgniter\I18n\Time;
 
 /**
  * Single owner of credential rules, session identity and staff creation.
@@ -50,6 +51,76 @@ class AuthService
         return $this->users->createStaff($username, $this->hashPassword($password), $role, $active);
     }
 
+    /**
+     * Verifies credentials and only then touches the session.
+     *
+     * Unknown, wrong-password and inactive accounts all return false so the
+     * caller can show one generic message (no user enumeration).
+     */
+    public function attempt(string $username, string $password): bool
+    {
+        $user = $this->users->findByUsername(self::normalize($username));
+
+        if ($user === null) {
+            password_verify($password, self::dummyHash());
+
+            return false;
+        }
+
+        if (! password_verify($password, $user->password_hash)) {
+            return false;
+        }
+
+        if ((int) $user->is_active !== 1) {
+            return false;
+        }
+
+        $session = session();
+        $session->regenerate(true);
+        $session->set(self::SESSION_USER_ID, (int) $user->id);
+
+        $this->users->update($user->id, [
+            'last_login_at' => Time::now()->toDateTimeString(),
+        ]);
+
+        return true;
+    }
+
+    public function logout(): void
+    {
+        $session = session();
+        $session->remove([self::SESSION_USER_ID, self::SESSION_INTENDED]);
+        $session->destroy();
+    }
+
+    /**
+     * Always re-reads the row: role and active changes must apply on the
+     * next request, and the session stores no role at all.
+     */
+    public function currentUser(): ?object
+    {
+        $id = session()->get(self::SESSION_USER_ID);
+
+        if ($id === null) {
+            return null;
+        }
+
+        $user = $this->users->find((int) $id);
+
+        if ($user === null || (int) $user->is_active !== 1) {
+            $this->logout();
+
+            return null;
+        }
+
+        return $user;
+    }
+
+    public function isAuthenticated(): bool
+    {
+        return $this->currentUser() !== null;
+    }
+
     public function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
@@ -58,5 +129,20 @@ class AuthService
     protected static function normalize(string $username): string
     {
         return strtolower(trim($username));
+    }
+
+    /**
+     * Built lazily so every unknown-user attempt pays one bcrypt verify,
+     * matching the timing of a real wrong-password attempt.
+     */
+    private static function dummyHash(): string
+    {
+        static $hash;
+
+        if ($hash === null) {
+            $hash = password_hash(bin2hex(random_bytes(8)), PASSWORD_DEFAULT);
+        }
+
+        return $hash;
     }
 }
