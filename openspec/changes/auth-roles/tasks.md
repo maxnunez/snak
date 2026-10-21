@@ -96,6 +96,11 @@ No code change needed in `Config/App.php` (locale already `es`), `Cookie.php`, `
 - [x] VF.7 `.env.example` test username is `snak`, matching `.env.testing` and `phpunit.dist.xml`; `AuthLanguageTest` scans commands, filters, and services. PROOF: `composer cs`; full suite.
 - [x] VF.8 `snak` untouched: `users=0`, `login_attempts=0`, `migrations=2` before and after the suite plus the live check. PROOF: identical counts.
 
+## Notice-Delivery Fix — re-verify warning 2 (2026-10-21)
+
+- [x] VF.9 RED `StaffFilterTest::testDeactivatedMidSessionDestroysSessionAndShowsExpiredNoticeOnLogin` with `TeardownSession` (drops writes after `destroy()`, like a real session teardown) → fails on the post-destroy flash (`getCookie` null). GREEN: the filter sets a one-time `snak_auth_notice` cookie, `AuthController::showLogin()` consumes it and renders `lang('Auth.sessionExpired')`; one destroy, message shown once. PROOF: `--filter testDeactivatedMidSessionDestroysSessionAndShowsExpiredNoticeOnLogin` → 1 test, 10 assertions.
+- [x] VF.10 Live proof (Apache `http://snak.local`): temp cashier login 303 → `/cashier`, active 200; deactivate → 302 `/login` + `Set-Cookie: snak_auth_notice=session_expired` (HttpOnly, SameSite=Lax); `GET /login` renders `Su sesión terminó. Ingrese nuevamente.`, second `GET /login` does not. Cleanup: temp user deleted, `snak.users=0`. PROOF: curl transcript; full suite 51/51 green on `snak_test`; `snak` counts unchanged.
+
 ## Manual / Operator-Only (never from apply)
 
 | # | Step | Why |

@@ -42,4 +42,18 @@ trait AuthTestTrait
 
         return $session;
     }
+
+    /**
+     * Replaces the framework MockSession with a double that drops writes made
+     * after destroy(), matching a real session teardown across requests.
+     */
+    protected function injectTeardownSession(): TeardownSession
+    {
+        $config  = config(Session::class);
+        $session = new TeardownSession(new ArrayHandler($config, '0.0.0.0'), $config);
+
+        Services::injectMock('session', $session);
+
+        return $session;
+    }
 }

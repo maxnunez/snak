@@ -57,7 +57,7 @@
 <script>
     Swal.fire({
         icon: 'error',
-        title: <?= json_encode($alert) ?>,
+        title: <?= json_encode($alert, JSON_UNESCAPED_UNICODE) ?>,
         confirmButtonColor: '#003366'
     });
 </script>

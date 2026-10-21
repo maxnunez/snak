@@ -41,8 +41,14 @@ final class StaffFilter implements FilterInterface
 
         // currentUser() already terminated the session for a missing or
         // inactive row; destroying it again would raise a PHP warning/500.
+        // A session flash cannot outlive that destroy, so the notice travels
+        // in a one-time cookie that AuthController consumes on /login.
         if ($user === null) {
-            return redirect()->to('/login')->with('authError', lang('Auth.sessionExpired'));
+            return redirect()->to('/login')->setCookie(
+                AuthService::NOTICE_COOKIE,
+                AuthService::NOTICE_SESSION_EXPIRED,
+                60,
+            );
         }
 
         $allowed = $arguments ?? [];

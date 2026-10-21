@@ -265,7 +265,7 @@ final class AuthTest extends CIUnitTestCase
 
         $this->assertStringContainsString('sweetalert2.all.min.js', $body);
         $this->assertStringContainsString('Swal.fire', $body);
-        $this->assertStringContainsString(json_encode(lang('Auth.loginFailed')), $body);
+        $this->assertStringContainsString(json_encode(lang('Auth.loginFailed'), JSON_UNESCAPED_UNICODE), $body);
         $this->assertStringNotContainsString('DataTable(', $body);
         $this->assertStringContainsString('csrf_test_name', $body);
         $this->assertStringContainsString(lang('Auth.loginTitle'), $body);

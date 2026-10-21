@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Services\AuthService;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
@@ -85,10 +86,10 @@ final class StaffFilterTest extends CIUnitTestCase
         $this->get('cashier/products')->assertStatus(200);
     }
 
-    public function testDeactivatedMidSessionDestroysSessionExactlyOnceAndRedirects(): void
+    public function testDeactivatedMidSessionDestroysSessionAndShowsExpiredNoticeOnLogin(): void
     {
         $id      = service('auth')->createUser('cashier1', 'Password123!');
-        $spy     = $this->injectDestroyCountingSession();
+        $spy     = $this->injectTeardownSession();
 
         $this->withSession(['user_id' => $id]);
         model('App\Models\UserModel')->setActive($id, false);
@@ -96,9 +97,39 @@ final class StaffFilterTest extends CIUnitTestCase
         $result = $this->get('cashier');
 
         $result->assertRedirectTo('/login');
-        $result->assertSessionHas('authError', lang('Auth.sessionExpired'));
         $this->assertNull(session('user_id'));
         $this->assertSame(1, $spy->destroyCalls, 'The session must be destroyed exactly once.');
+
+        $notice = $result->response()->getCookie(AuthService::NOTICE_COOKIE);
+
+        $this->assertNotNull($notice, 'The redirect must carry the notice outside the destroyed session.');
+        $this->assertSame(AuthService::NOTICE_SESSION_EXPIRED, $notice->getValue());
+
+        // Follow the redirect as the browser does: notice cookie, empty session.
+        service('superglobals')->setCookie(AuthService::NOTICE_COOKIE, $notice->getValue());
+        $this->withSession([]);
+
+        $login = $this->get('login');
+
+        $login->assertStatus(200);
+        $this->assertStringContainsString(
+            lang('Auth.sessionExpired'),
+            (string) $login->response()->getBody(),
+            'The login page must render the Spanish session-expired message.',
+        );
+
+        // One-time: the first login-page render consumes the notice.
+        service('superglobals')->setCookie(AuthService::NOTICE_COOKIE, '');
+
+        $again = $this->get('login');
+
+        $again->assertStatus(200);
+        $this->assertStringNotContainsString(
+            lang('Auth.sessionExpired'),
+            (string) $again->response()->getBody(),
+        );
+
+        service('superglobals')->unsetCookie(AuthService::NOTICE_COOKIE);
     }
 
     public function testPublicRoutesRemainPublic(): void

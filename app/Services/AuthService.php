@@ -19,6 +19,13 @@ class AuthService
     public const SESSION_USER_ID  = 'user_id';
     public const SESSION_INTENDED = 'intended_url';
 
+    /**
+     * One-time notice carried in a cookie because a flash written to the
+     * session after logout() has already been destroyed is never delivered.
+     */
+    public const NOTICE_COOKIE          = 'snak_auth_notice';
+    public const NOTICE_SESSION_EXPIRED = 'session_expired';
+
     private const SESSION_TERMINATED = 'auth_terminated';
 
     private const PASSWORD_MIN_BYTES = 8;

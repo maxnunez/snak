@@ -15,9 +15,11 @@ class AuthController extends BaseController
             return redirect()->to('/cashier');
         }
 
+        $notice = $this->pullNotice();
+
         return view('auth/login', [
             'errors' => session('errors') ?? [],
-            'alert'  => session('authError'),
+            'alert'  => session('authError') ?? $notice,
         ]);
     }
 
@@ -74,5 +76,25 @@ class AuthController extends BaseController
         }
 
         return $intended;
+    }
+
+    /**
+     * Consumes the one-time notice left by the staff filter when it had to
+     * destroy an already-terminated session. Flashdata cannot survive
+     * session_destroy(), so the message arrives in a cookie instead.
+     */
+    private function pullNotice(): ?string
+    {
+        $notice = $this->request->getCookie(AuthService::NOTICE_COOKIE);
+
+        if (! is_string($notice) || $notice === '') {
+            return null;
+        }
+
+        $this->response->deleteCookie(AuthService::NOTICE_COOKIE);
+
+        return $notice === AuthService::NOTICE_SESSION_EXPIRED
+            ? lang('Auth.sessionExpired')
+            : null;
     }
 }
