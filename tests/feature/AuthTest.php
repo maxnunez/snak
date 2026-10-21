@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Services\AuthService;
+use App\Services\LoginThrottleService;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Security\Exceptions\SecurityException;
 use CodeIgniter\Test\CIUnitTestCase;
@@ -135,6 +137,57 @@ final class AuthTest extends CIUnitTestCase
         $this->assertNull(session('user_id'));
         $this->assertFalse(service('auth')->isAuthenticated());
         $this->assertNull(service('auth')->currentUser());
+    }
+
+    public function testLogoutDestroysSessionExactlyOnceEvenIfCalledTwice(): void
+    {
+        $id  = service('auth')->createUser('cashier1', 'Password123!');
+        $spy = $this->injectDestroyCountingSession();
+
+        $_SESSION['user_id'] = $id;
+
+        service('auth')->logout();
+
+        $this->assertSame(1, $spy->destroyCalls);
+        $this->assertNull(session('user_id'));
+
+        service('auth')->logout();
+
+        $this->assertSame(1, $spy->destroyCalls, 'Logout must be idempotent.');
+    }
+
+    public function testLogoutWithInvalidCsrfTokenKeepsSessionIntact(): void
+    {
+        $id = service('auth')->createUser('cashier1', 'Password123!');
+
+        $this->withSession(['user_id' => $id]);
+
+        try {
+            $this->post('logout', [config('Security')->tokenName => 'not-a-valid-token']);
+            $this->fail('Expected SecurityException for an invalid logout token.');
+        } catch (SecurityException) {
+            // Non-production Security::$redirect is false, so the filter throws.
+        }
+
+        $this->assertSame($id, session('user_id'));
+
+        $this->continueSession();
+        $this->get('cashier')->assertStatus(200);
+    }
+
+    public function testUnknownUserRunsDummyPasswordVerification(): void
+    {
+        $id  = service('auth')->createUser('cashier1', 'Password123!');
+        $row = $this->db->table('users')->where('id', $id)->get()->getRow();
+
+        $unknown = $this->recordingAuth();
+        $this->assertFalse($unknown->attempt('ghost', 'WrongPass123!', '127.0.0.1'));
+        $this->assertCount(1, $unknown->verifiedHashes);
+        $this->assertNotSame($row->password_hash, $unknown->verifiedHashes[0]);
+
+        $known = $this->recordingAuth();
+        $this->assertFalse($known->attempt('cashier1', 'WrongPass123!', '127.0.0.1'));
+        $this->assertSame([$row->password_hash], $known->verifiedHashes);
     }
 
     public function testMissingCsrfTokenThrowsOnPostLogin(): void
@@ -279,6 +332,14 @@ final class AuthTest extends CIUnitTestCase
         $this->assertSame(0, $this->db->table('login_attempts')->countAllResults());
     }
 
+    private function recordingAuth(): RecordingAuthService
+    {
+        return new RecordingAuthService(
+            model(\App\Models\UserModel::class),
+            new LoginThrottleService(db_connect()),
+        );
+    }
+
     private function insertFailure(string $attemptedAt): void
     {
         $this->db->table('login_attempts')->insert([
@@ -286,5 +347,22 @@ final class AuthTest extends CIUnitTestCase
             'ip_address'   => '127.0.0.1',
             'attempted_at' => $attemptedAt,
         ]);
+    }
+}
+
+/**
+ * Records which hashes AuthService::attempt() verifies, so the dummy-verify
+ * branch for unknown users is observable without timing heuristics.
+ */
+final class RecordingAuthService extends AuthService
+{
+    /** @var list<string> */
+    public array $verifiedHashes = [];
+
+    protected function verifyPassword(string $password, string $hash): bool
+    {
+        $this->verifiedHashes[] = $hash;
+
+        return parent::verifyPassword($password, $hash);
     }
 }

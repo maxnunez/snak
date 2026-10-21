@@ -39,10 +39,9 @@ final class StaffFilter implements FilterInterface
 
         $user = service('auth')->currentUser();
 
-        if ($user === null || (int) $user->is_active !== 1) {
-            $session->remove([AuthService::SESSION_USER_ID, AuthService::SESSION_INTENDED]);
-            $session->destroy();
-
+        // currentUser() already terminated the session for a missing or
+        // inactive row; destroying it again would raise a PHP warning/500.
+        if ($user === null) {
             return redirect()->to('/login')->with('authError', lang('Auth.sessionExpired'));
         }
 

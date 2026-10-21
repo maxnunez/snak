@@ -85,9 +85,10 @@ final class StaffFilterTest extends CIUnitTestCase
         $this->get('cashier/products')->assertStatus(200);
     }
 
-    public function testDeactivatedMidSessionDestroysSessionAndRedirects(): void
+    public function testDeactivatedMidSessionDestroysSessionExactlyOnceAndRedirects(): void
     {
-        $id = service('auth')->createUser('cashier1', 'Password123!');
+        $id      = service('auth')->createUser('cashier1', 'Password123!');
+        $spy     = $this->injectDestroyCountingSession();
 
         $this->withSession(['user_id' => $id]);
         model('App\Models\UserModel')->setActive($id, false);
@@ -97,6 +98,7 @@ final class StaffFilterTest extends CIUnitTestCase
         $result->assertRedirectTo('/login');
         $result->assertSessionHas('authError', lang('Auth.sessionExpired'));
         $this->assertNull(session('user_id'));
+        $this->assertSame(1, $spy->destroyCalls, 'The session must be destroyed exactly once.');
     }
 
     public function testPublicRoutesRemainPublic(): void

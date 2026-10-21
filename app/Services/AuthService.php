@@ -19,6 +19,8 @@ class AuthService
     public const SESSION_USER_ID  = 'user_id';
     public const SESSION_INTENDED = 'intended_url';
 
+    private const SESSION_TERMINATED = 'auth_terminated';
+
     private const PASSWORD_MIN_BYTES = 8;
     private const PASSWORD_MAX_BYTES = 72;
 
@@ -64,7 +66,7 @@ class AuthService
         $username = self::normalize($username);
 
         if ($this->throttle->isBlocked($username, $ip)) {
-            password_verify($password, self::dummyHash());
+            $this->verifyPassword($password, self::dummyHash());
 
             return false;
         }
@@ -72,13 +74,13 @@ class AuthService
         $user = $this->users->findByUsername($username);
 
         if ($user === null) {
-            password_verify($password, self::dummyHash());
+            $this->verifyPassword($password, self::dummyHash());
             $this->throttle->recordFailure($username, $ip);
 
             return false;
         }
 
-        if (! password_verify($password, $user->password_hash)) {
+        if (! $this->verifyPassword($password, $user->password_hash)) {
             $this->throttle->recordFailure($username, $ip);
 
             return false;
@@ -94,6 +96,7 @@ class AuthService
 
         $session = session();
         $session->regenerate(true);
+        $session->remove(self::SESSION_TERMINATED);
         $session->set(self::SESSION_USER_ID, (int) $user->id);
 
         $this->users->update($user->id, [
@@ -103,10 +106,21 @@ class AuthService
         return true;
     }
 
+    /**
+     * Single owner of session termination. Idempotent by design: callers such
+     * as the filter may reach this after currentUser() already logged out,
+     * and a second session_destroy() raises "uninitialized session" in PHP.
+     */
     public function logout(): void
     {
         $session = session();
+
+        if ($session->get(self::SESSION_TERMINATED) === true) {
+            return;
+        }
+
         $session->remove([self::SESSION_USER_ID, self::SESSION_INTENDED]);
+        $session->set(self::SESSION_TERMINATED, true);
         $session->destroy();
     }
 
@@ -141,6 +155,15 @@ class AuthService
     public function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    /**
+     * Seam so tests can prove the unknown-user branch still pays a dummy
+     * verification instead of returning early.
+     */
+    protected function verifyPassword(string $password, string $hash): bool
+    {
+        return password_verify($password, $hash);
     }
 
     protected static function normalize(string $username): string
