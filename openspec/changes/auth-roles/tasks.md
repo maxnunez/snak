@@ -74,14 +74,14 @@ Chain strategy: stacked-to-main
 
 ## Group 3 — `feat(auth): gate cashier area by role` (PR 3)
 
-- [ ] 3.1 RED `tests/feature/StaffFilterTest.php::testAnonymousRequestRedirectsAndStoresIntendedUrl` → GREEN `app/Filters/StaffFilter.php`, `Config/Filters.php` alias `staff`, `Config/Routes.php` `staff:cashier` group, `app/Controllers/CashierController.php`, `app/Views/cashier/index.php`. PROOF: `--filter StaffFilterTest`.
-- [ ] 3.2 RED `StaffFilterTest::testCashierGetsCashierHome200` → GREEN `AuthService::currentUser()` (no memoisation). PROOF: filter.
-- [ ] 3.3 RED `StaffFilterTest::testStaffAdminArgumentReturns403WithSpanishCopy` (`withRoutes`) → GREEN `$arguments` check + `app/Views/errors/403.php`. PROOF: filter.
-- [ ] 3.4 RED `StaffFilterTest::testDeactivatedMidSessionDestroysSessionAndRedirects` → GREEN re-read row + `remove()`/`destroy()` + `lang('Auth.sessionExpired')`. PROOF: filter.
-- [ ] 3.5 RED `StaffFilterTest::testPublicRoutesRemainPublic` (`/`, `/login`, `/health`, static) → GREEN routes untouched. PROOF: filter.
-- [ ] 3.6 RED `StaffFilterTest::testRoleChangeTakesEffectOnNextRequest` → GREEN no role in session payload. PROOF: filter.
-- [ ] 3.7 **`snak` untouched**: run full suite, then `mysql -usnak -p snak -e 'SHOW TABLES; SELECT COUNT(*) FROM migrations;' | diff /tmp/snak-baseline.txt -`. PROOF: empty diff.
-- [ ] 3.8 Manual M3: `php spark migrate --all` on `snak` → exactly `migrations`, `users`, `login_attempts`; `migrate:rollback` drops both; re-migrate.
+- [x] 3.1 RED `tests/feature/StaffFilterTest.php::testAnonymousRequestRedirectsAndStoresIntendedUrl` → GREEN `app/Filters/StaffFilter.php`, `Config/Filters.php` alias `staff`, `Config/Routes.php` `staff:cashier` group, `app/Controllers/CashierController.php`, `app/Views/cashier/index.php`. PROOF: `--filter StaffFilterTest`.
+- [x] 3.2 RED `StaffFilterTest::testCashierGetsCashierHome200` → GREEN `AuthService::currentUser()` (no memoisation). PROOF: filter.
+- [x] 3.3 RED `StaffFilterTest::testStaffAdminArgumentReturns403WithSpanishCopy` (`withRoutes`) → GREEN `$arguments` check + `app/Views/errors/403.php`. PROOF: filter.
+- [x] 3.4 RED `StaffFilterTest::testDeactivatedMidSessionDestroysSessionAndRedirects` → GREEN re-read row + `remove()`/`destroy()` + `lang('Auth.sessionExpired')`. PROOF: filter.
+- [x] 3.5 RED `StaffFilterTest::testPublicRoutesRemainPublic` (`/`, `/login`, `/health`, static) → GREEN routes untouched. PROOF: filter.
+- [x] 3.6 RED `StaffFilterTest::testRoleChangeTakesEffectOnNextRequest` → GREEN no role in session payload. PROOF: filter.
+- [x] 3.7 **`snak` untouched**: run full suite, then `mysql -usnak -p snak -e 'SHOW TABLES; SELECT COUNT(*) FROM migrations;' | diff /tmp/snak-baseline.txt -`. PROOF: empty diff.
+- [x] 3.8 Manual M3: `php spark migrate --all` on `snak` → exactly `migrations`, `users`, `login_attempts`; `migrate:rollback` drops both; re-migrate.
 
 No code change needed in `Config/App.php` (locale already `es`), `Cookie.php`, `Security.php`, `composer.*` — verified, not tasks.
 

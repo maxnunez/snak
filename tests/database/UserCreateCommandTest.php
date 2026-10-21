@@ -78,16 +78,14 @@ final class UserCreateCommandTest extends CIUnitTestCase
 
     public function testCapturedOutputHasNoPasswordOrHash(): void
     {
-        $password = 'Zx9!VerySecret42';
-
-        $exit = $this->runCommand('quietuser', $password);
+        $exit = $this->runCommand('quietuser', 'Zx9!VerySecret42');
 
         $this->assertSame(EXIT_SUCCESS, $exit);
 
         $row    = $this->db->table('users')->where('username', 'quietuser')->get()->getRow();
         $output = $this->getStreamFilterBuffer();
 
-        $this->assertStringNotContainsString($password, $output);
+        $this->assertStringNotContainsString('Zx9!VerySecret42', $output);
         $this->assertStringNotContainsString($row->password_hash, $output);
     }
 

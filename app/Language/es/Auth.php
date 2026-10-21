@@ -14,4 +14,7 @@ return [
     'passwordRequired'  => 'Ingrese su contraseña.',
     'passwordLength'    => 'La contraseña debe tener al menos 8 caracteres y no superar los 72 bytes.',
     'passwordMismatch'  => 'Las contraseñas no coinciden.',
+    'cashierHome'       => 'Área de caja',
+    'signedInAs'        => 'Sesión iniciada como',
+    'backHome'          => 'Volver al inicio',
 ];

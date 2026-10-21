@@ -9,3 +9,7 @@ $routes->get('health', 'Health::index');
 $routes->get('login', 'AuthController::showLogin');
 $routes->post('login', 'AuthController::login');
 $routes->post('logout', 'AuthController::logout');
+
+$routes->group('cashier', ['filter' => 'staff:cashier'], static function (RouteCollection $routes): void {
+    $routes->get('/', 'CashierController::index');
+});
