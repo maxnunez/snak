@@ -87,7 +87,9 @@ php_errors.log
 #-------------------------
 # Composer
 #-------------------------
-vendor/
+# Composer dependencies only at the project root; vendored frontend assets
+# under public/assets/vendor are tracked on purpose.
+/vendor/
 
 #-------------------------
 # IDE / Development Files

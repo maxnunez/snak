@@ -58,11 +58,11 @@ Later, not here: BOB in `app/Config/Snak.php` (`currencyCode`, `currencySymbol`,
 
 ## Phase 4 — Unit 4: base shell, local assets (PR 3, commit 4)
 
-- [ ] 4.1 RED: `tests/feature/ShellTest.php` — GET `/` 200, no external origin, links `/assets/css/app.css`, SweetAlert2, DataTables, `#003366` present. Prove: phpunit fails.
-- [ ] 4.2 Scaffold, no test (vendored binaries): `public/assets/vendor/{bootstrap/4.6.2,jquery/3.7.1,sweetalert2/11.26.25,datatables/1.13.11}/*` + `public/assets/VERSIONS.md`. Proved by 4.1.
-- [ ] 4.3 `public/assets/css/app.css`: `#003366` primary (hover/focus/active), `.bg-primary`, links, black on white. Proved by 4.1.
-- [ ] 4.4 `app/Views/layouts/base.php`, `app/Views/partials/{head,scripts}.php`, `app/Views/home/index.php`, `app/Language/es/App.php`, `app/Controllers/Home.php`, `$routes->get('/', 'Home::index')`; no prose outside Language. Prove: phpunit green.
-- [ ] 4.5 Commit 4 `feat(ui): add base layout with vendored Bootstrap 4 assets`.
+- [x] 4.1 RED: `tests/feature/ShellTest.php` — GET `/` 200, no external origin, links `/assets/css/app.css`, SweetAlert2, DataTables, `#003366` present. Prove: phpunit fails.
+- [x] 4.2 Scaffold, no test (vendored binaries): `public/assets/vendor/{bootstrap/4.6.2,jquery/3.7.1,sweetalert2/11.26.25,datatables/1.13.11}/*` + `public/assets/VERSIONS.md`. Proved by 4.1.
+- [x] 4.3 `public/assets/css/app.css`: `#003366` primary (hover/focus/active), `.bg-primary`, links, black on white. Proved by 4.1.
+- [x] 4.4 `app/Views/layouts/base.php`, `app/Views/partials/{head,scripts}.php`, `app/Views/home/index.php`, `app/Language/es/App.php`, `app/Controllers/Home.php`, `$routes->get('/', 'Home::index')`; no prose outside Language. Prove: phpunit green.
+- [x] 4.5 Commit 4 `feat(ui): add base layout with vendored Bootstrap 4 assets`.
 
 ## Phase 5 — Unit 5: migrations + ops (PR 3, commit 5)
 
