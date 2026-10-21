@@ -64,7 +64,17 @@ final class UserCreateCommandTest extends CIUnitTestCase
         $exit = $this->runCommand('existing', 'AnotherPass123!');
 
         $this->assertSame(EXIT_ERROR, $exit);
+        $this->assertStringContainsString(lang('Auth.usernameDuplicate'), $this->getStreamFilterBuffer());
         $this->assertSame($before, $this->db->table('users')->countAllResults());
+    }
+
+    public function testInvalidUsernameRejectedWithSpanishMessage(): void
+    {
+        $exit = $this->runCommand('bad name!', 'Password123!');
+
+        $this->assertSame(EXIT_ERROR, $exit);
+        $this->assertStringContainsString(lang('Auth.usernameInvalid'), $this->getStreamFilterBuffer());
+        $this->assertSame(0, $this->db->table('users')->countAllResults());
     }
 
     public function testSevenBytePasswordRejectedWithSpanishMessage(): void

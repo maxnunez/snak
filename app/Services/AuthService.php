@@ -38,8 +38,23 @@ class AuthService
     ): int {
         $validation = service('validation', null, false);
         $validation->setRules([
-            'username' => 'required|min_length[3]|max_length[50]|regex_match[/^[a-z0-9._-]+$/]|is_unique[users.username]',
-            'role'     => 'required|in_list[cashier,admin]',
+            'username' => [
+                'rules'  => 'required|min_length[3]|max_length[50]|regex_match[/^[a-z0-9._-]+$/]|is_unique[users.username]',
+                'errors' => [
+                    'required'   => 'Auth.usernameRequired',
+                    'min_length' => 'Auth.usernameInvalid',
+                    'max_length' => 'Auth.usernameInvalid',
+                    'regex_match' => 'Auth.usernameInvalid',
+                    'is_unique'  => 'Auth.usernameDuplicate',
+                ],
+            ],
+            'role' => [
+                'rules'  => 'required|in_list[cashier,admin]',
+                'errors' => [
+                    'required' => 'Auth.roleInvalid',
+                    'in_list'  => 'Auth.roleInvalid',
+                ],
+            ],
         ]);
 
         if (! $validation->run(['username' => $username, 'role' => $role])) {
