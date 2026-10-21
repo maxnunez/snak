@@ -14,7 +14,10 @@ final class AuthLanguageTest extends CIUnitTestCase
     public function testEveryAuthKeyReferencedByIdentifierResolves(): void
     {
         $paths = [
+            APPPATH . 'Commands/UserCreate.php',
             APPPATH . 'Controllers/AuthController.php',
+            APPPATH . 'Filters/StaffFilter.php',
+            APPPATH . 'Services/AuthService.php',
             APPPATH . 'Views/auth/',
             APPPATH . 'Views/cashier/',
             APPPATH . 'Views/errors/403.php',
@@ -40,9 +43,6 @@ final class AuthLanguageTest extends CIUnitTestCase
 
         $referenced = array_values(array_unique($matches[1]));
         $this->assertNotSame([], $referenced, 'No Auth.* references found.');
-
-        // Spec-mandated copy that lands in Group 3's filter/403 view.
-        $referenced = array_values(array_unique([...$referenced, 'sessionExpired', 'forbidden']));
 
         $language = require APPPATH . 'Language/es/Auth.php';
 
