@@ -66,8 +66,8 @@ Later, not here: BOB in `app/Config/Snak.php` (`currencyCode`, `currencySymbol`,
 
 ## Phase 5 — Unit 5: migrations + ops (PR 3, commit 5)
 
-- [ ] 5.1 `app/Database/{Migrations,Seeds}/.gitkeep`, default `app/Config/Migrations.php`; `migrate`/`migrate:rollback` scripts in `composer.json`.
-- [ ] 5.2 Manual before migrate: `SHOW GRANTS FOR 'snak'@'localhost'` must include `CREATE` (+ `ALTER`/`DROP`/`INDEX`) on `snak.*`; else STOP and report (root grant needed).
-- [ ] 5.3 Gate: `php spark migrate --all` exit 0; `SHOW TABLES` ⊆ `{migrations}`; `migrate:status`, `migrate:rollback --all` exit 0; no app table left.
-- [ ] 5.4 Commit 5 `chore(ops): add migration scripts` (vhost in commit 1 so PR 1 can hold credentials).
-- [ ] 5.5 PR 3 verify: `vendor/bin/phpunit`, `composer cs`, `apache2ctl configtest`, `curl -H 'Host: snak.local' http://127.0.0.1/health` → 200 ok/ok, `curl http://localhost/snak/.env` → 403/404.
+- [x] 5.1 `app/Database/{Migrations,Seeds}/.gitkeep`, default `app/Config/Migrations.php`; `migrate`/`migrate:rollback` scripts in `composer.json`.
+- [x] 5.2 Manual before migrate: `SHOW GRANTS FOR 'snak'@'localhost'` must include `CREATE` (+ `ALTER`/`DROP`/`INDEX`) on `snak.*`; else STOP and report (root grant needed).
+- [x] 5.3 Gate: `php spark migrate --all` exit 0; `SHOW TABLES` ⊆ `{migrations}`; `migrate:status`, `migrate:rollback --all` exit 0; no app table left.
+- [x] 5.4 Commit 5 `chore(ops): add migration scripts` (vhost in commit 1 so PR 1 can hold credentials).
+- [x] 5.5 PR 3 verify: `vendor/bin/phpunit`, `composer cs`, `apache2ctl configtest`, `curl -H 'Host: snak.local' http://127.0.0.1/health` → 200 ok/ok, `curl http://localhost/snak/.env` → 403/404.

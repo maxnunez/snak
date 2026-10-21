@@ -41,6 +41,8 @@
     "scripts": {
         "test": "phpunit",
         "cs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no",
-        "cs:fix": "@php vendor/bin/php-cs-fixer fix --using-cache=no"
+        "cs:fix": "@php vendor/bin/php-cs-fixer fix --using-cache=no",
+        "migrate": "php spark migrate --all",
+        "migrate:rollback": "php spark migrate:rollback --all"
     }
 }
