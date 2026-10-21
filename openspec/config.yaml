@@ -1,0 +1,55 @@
+schema: spec-driven
+
+context: |
+  Project: snak (greenfield, no code yet at init time)
+  Stack: CodeIgniter 4 (MVC, latest stable 4.x), MariaDB, PHP 8.4
+  Frontend: Bootstrap 4, SweetAlert2, DataTables (jQuery), primary color #003366
+  Architecture: CI4 MVC (Controllers, Models, Views) plus services/helpers
+  Testing: PHPUnit 10.5.66 via Composer - runner available at vendor/bin/phpunit
+  Style: PSR-12 via CI4 conventions; server-rendered views, no SPA framework
+  Host: Debian 13 (trixie), Apache serving /var/www/html, Composer 2
+
+# Testing capabilities and TDD resolution.
+# PHPUnit is installed as a Composer dev dependency, so strict TDD is active.
+testing:
+  strict_tdd: true
+  strict_tdd_source: "global agent marker (strict-tdd-mode: enabled)"
+  runner_available: true
+  framework: PHPUnit
+  test_command: "vendor/bin/phpunit"
+  expected_test_command: "vendor/bin/phpunit"
+  coverage_command: ""
+  note: >
+    PHPUnit 10.5.66 is installed via Composer. Run the suite with
+    `vendor/bin/phpunit`; the smoke and config tests exercise the app through
+    the CI4 test bootstrap.
+
+verify:
+  test_command: "vendor/bin/phpunit"
+
+rules:
+  proposal:
+    - State scope boundaries explicitly; this is a greenfield repo with no legacy constraints
+    - Include a rollback plan for risky changes
+    - Record unverified environment assumptions (database credentials, vhost) as open risks
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Specify validation rules and user-facing error behavior per requirement
+  design:
+    - Follow CodeIgniter 4 conventions (Controller/Model/View, Config classes, migrations)
+    - Express schema changes as CI4 migrations, never ad-hoc SQL
+    - Include sequence diagrams for complex flows
+  tasks:
+    - Group by phase with hierarchical numbering
+    - Keep each task completable in one session
+    - Front-load scaffolding (CI4 install, .env, database config) before feature work
+  apply:
+    - Follow existing code patterns once the scaffold exists
+    - Do not start feature work before the CI4 scaffold and PHPUnit runner exist
+    - If the test runner is still unavailable, STOP and report instead of skipping RED/GREEN
+  verify:
+    - Report only test evidence that was actually executed
+    - Re-check config.yaml test_command before running verification
+  archive:
+    - Warn before merging destructive deltas
