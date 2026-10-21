@@ -85,6 +85,17 @@ Chain strategy: stacked-to-main
 
 No code change needed in `Config/App.php` (locale already `es`), `Cookie.php`, `Security.php`, `composer.*` — verified, not tasks.
 
+## Verify-Fix Batch — post-verify findings (2026-10-21)
+
+- [x] VF.1 RED `StaffFilterTest::testDeactivatedMidSessionDestroysSessionExactlyOnceAndRedirects` + `AuthTest::testLogoutDestroysSessionExactlyOnceEvenIfCalledTwice` with `DestroyCountingSession` (fails on the second destroy) → GREEN `AuthService::logout()` idempotent guard and `StaffFilter` no longer destroys after `currentUser()`. PROOF: `--filter 'testDeactivatedMidSession...|testLogoutDestroysSession...'`; live deactivation → 302 `/login`, no new 500.
+- [x] VF.2 RED `AuthTest::testUnknownUserRunsDummyPasswordVerification` → GREEN `AuthService::verifyPassword()` seam; unknown user verifies a dummy hash, known user verifies the stored hash. PROOF: filter.
+- [x] VF.3 `AuthTest::testLogoutWithInvalidCsrfTokenKeepsSessionIntact` (characterization of the already-shipped CSRF filter). PROOF: filter.
+- [x] VF.4 `AppConfigTest::testProductionCookieEnvironmentEnablesSecureHttpOnlyLax` (env override; dev may omit Secure). PROOF: filter.
+- [x] VF.5 `AppConfigTest::testStaffFilterIsRegisteredAndAppliedToCashierRoutes` (alias + `staff:cashier` on the cashier group). PROOF: filter.
+- [x] VF.6 RED `UserCreateCommandTest::testDuplicateUsernameExitsNonZeroAndWritesNothing` + `::testInvalidUsernameRejectedWithSpanishMessage` → GREEN Spanish `Auth.*` validation messages in `AuthService::createUser()`. PROOF: filter.
+- [x] VF.7 `.env.example` test username is `snak`, matching `.env.testing` and `phpunit.dist.xml`; `AuthLanguageTest` scans commands, filters, and services. PROOF: `composer cs`; full suite.
+- [x] VF.8 `snak` untouched: `users=0`, `login_attempts=0`, `migrations=2` before and after the suite plus the live check. PROOF: identical counts.
+
 ## Manual / Operator-Only (never from apply)
 
 | # | Step | Why |
