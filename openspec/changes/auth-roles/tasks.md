@@ -48,10 +48,10 @@ Chain strategy: stacked-to-main
 
 ## Group 1b — `feat(cli): add user:create command` (PR 1)
 
-- [ ] 1b.1 RED `tests/database/UserCreateCommandTest.php::testCreatesActiveCashierViaAskSeam` → GREEN `app/Commands/UserCreate.php` (`stty -echo`, `stream_isatty` guard, `service('auth')->createUser`). PROOF: `--filter UserCreateCommandTest`.
-- [ ] 1b.2 RED `UserCreateCommandTest::testDuplicateUsernameExitsNonZeroAndWritesNothing` → GREEN `ValidationException` → `$this->error()` + `EXIT_ERROR` before insert. PROOF: filter + unchanged `COUNT(*)` on `users`.
-- [ ] 1b.3 RED `UserCreateCommandTest::testSevenBytePasswordRejectedWithSpanishMessage` + `::testCapturedOutputHasNoPasswordOrHash` → GREEN output `User #<id> created with role <role>.` PROOF: filter; `grep -riE 'password|hash' writable/logs/` empty.
-- [ ] 1b.4 Proof-only: `git grep -nE "password[[:space:]]*=[[:space:]]*'[^']+'"` → no hits; `git ls-files | grep -E '^\.env'` → `.env.example` only.
+- [x] 1b.1 RED `tests/database/UserCreateCommandTest.php::testCreatesActiveCashierViaAskSeam` → GREEN `app/Commands/UserCreate.php` (`stty -echo`, `stream_isatty` guard, `service('auth')->createUser`). PROOF: `--filter UserCreateCommandTest`.
+- [x] 1b.2 RED `UserCreateCommandTest::testDuplicateUsernameExitsNonZeroAndWritesNothing` → GREEN `ValidationException` → `$this->error()` + `EXIT_ERROR` before insert. PROOF: filter + unchanged `COUNT(*)` on `users`.
+- [x] 1b.3 RED `UserCreateCommandTest::testSevenBytePasswordRejectedWithSpanishMessage` + `::testCapturedOutputHasNoPasswordOrHash` → GREEN output `User #<id> created with role <role>.` PROOF: filter; `grep -riE 'password|hash' writable/logs/` empty.
+- [x] 1b.4 Proof-only: `git grep -nE "password[[:space:]]*=[[:space:]]*'[^']+'"` → no hits; `git ls-files | grep -E '^\.env'` → `.env.example` only.
 
 ## Group 2a — `feat(auth): add staff login and logout` (PR 2)
 
