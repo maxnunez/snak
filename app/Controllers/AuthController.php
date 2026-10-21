@@ -44,7 +44,11 @@ class AuthController extends BaseController
 
         $credentials = $this->request->getPost(['username', 'password']);
 
-        if (! service('auth')->attempt((string) $credentials['username'], (string) $credentials['password'])) {
+        if (! service('auth')->attempt(
+            (string) $credentials['username'],
+            (string) $credentials['password'],
+            $this->request->getIPAddress(),
+        )) {
             return redirect()->to('/login')
                 ->withInput()
                 ->with('authError', lang('Auth.loginFailed'));

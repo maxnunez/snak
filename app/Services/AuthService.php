@@ -22,8 +22,10 @@ class AuthService
     private const PASSWORD_MIN_BYTES = 8;
     private const PASSWORD_MAX_BYTES = 72;
 
-    public function __construct(private readonly UserModel $users)
-    {
+    public function __construct(
+        private readonly UserModel $users,
+        private readonly LoginThrottleService $throttle,
+    ) {
     }
 
     public function createUser(
@@ -57,23 +59,38 @@ class AuthService
      * Unknown, wrong-password and inactive accounts all return false so the
      * caller can show one generic message (no user enumeration).
      */
-    public function attempt(string $username, string $password): bool
+    public function attempt(string $username, string $password, string $ip): bool
     {
-        $user = $this->users->findByUsername(self::normalize($username));
+        $username = self::normalize($username);
 
-        if ($user === null) {
+        if ($this->throttle->isBlocked($username, $ip)) {
             password_verify($password, self::dummyHash());
 
             return false;
         }
 
+        $user = $this->users->findByUsername($username);
+
+        if ($user === null) {
+            password_verify($password, self::dummyHash());
+            $this->throttle->recordFailure($username, $ip);
+
+            return false;
+        }
+
         if (! password_verify($password, $user->password_hash)) {
+            $this->throttle->recordFailure($username, $ip);
+
             return false;
         }
 
         if ((int) $user->is_active !== 1) {
+            $this->throttle->recordFailure($username, $ip);
+
             return false;
         }
+
+        $this->throttle->resetWindow($username, $ip);
 
         $session = session();
         $session->regenerate(true);

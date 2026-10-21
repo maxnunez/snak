@@ -34,6 +34,7 @@ final class AuthTest extends CIUnitTestCase
         $this->db->table('users')->truncate();
 
         $_SESSION = [];
+        service('superglobals')->setServer('REMOTE_ADDR', '127.0.0.1');
         Time::setTestNow('2026-10-21 10:00:00');
     }
 
@@ -224,5 +225,66 @@ final class AuthTest extends CIUnitTestCase
         $this->withSession(['user_id' => $id]);
 
         $this->get('login')->assertRedirectTo('/cashier');
+    }
+
+    public function testSixthAttemptBlockedEvenWithCorrectPassword(): void
+    {
+        service('auth')->createUser('cashier1', 'Password123!');
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->insertFailure('2026-10-21 09:55:00');
+        }
+
+        $result = $this->postWithCsrf('login', [
+            'username' => 'cashier1',
+            'password' => 'Password123!',
+        ]);
+
+        $result->assertRedirectTo('/login');
+        $result->assertSessionHas('authError', lang('Auth.loginFailed'));
+        $this->assertNull(session('user_id'));
+        $this->assertSame(5, $this->db->table('login_attempts')->countAllResults());
+    }
+
+    public function testFailuresOlderThanWindowAllowed(): void
+    {
+        $id = service('auth')->createUser('cashier1', 'Password123!');
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->insertFailure('2026-10-21 09:44:59');
+        }
+
+        $result = $this->postWithCsrf('login', [
+            'username' => 'cashier1',
+            'password' => 'Password123!',
+        ]);
+
+        $result->assertRedirectTo('/cashier');
+        $this->assertSame($id, session('user_id'));
+    }
+
+    public function testSuccessfulLoginResetsWindow(): void
+    {
+        service('auth')->createUser('cashier1', 'Password123!');
+
+        for ($i = 0; $i < 4; $i++) {
+            $this->insertFailure('2026-10-21 09:55:00');
+        }
+
+        $this->postWithCsrf('login', [
+            'username' => 'cashier1',
+            'password' => 'Password123!',
+        ])->assertRedirectTo('/cashier');
+
+        $this->assertSame(0, $this->db->table('login_attempts')->countAllResults());
+    }
+
+    private function insertFailure(string $attemptedAt): void
+    {
+        $this->db->table('login_attempts')->insert([
+            'username'     => 'cashier1',
+            'ip_address'   => '127.0.0.1',
+            'attempted_at' => $attemptedAt,
+        ]);
     }
 }

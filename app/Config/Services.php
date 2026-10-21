@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Models\UserModel;
 use App\Services\AuthService;
+use App\Services\LoginThrottleService;
 use CodeIgniter\Config\BaseService;
 
 /**
@@ -27,6 +28,6 @@ class Services extends BaseService
             return static::getSharedInstance('auth');
         }
 
-        return new AuthService(model(UserModel::class));
+        return new AuthService(model(UserModel::class), new LoginThrottleService(db_connect()));
     }
 }

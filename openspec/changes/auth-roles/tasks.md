@@ -67,10 +67,10 @@ Chain strategy: stacked-to-main
 
 ## Group 2b — `feat(auth): throttle failed logins` (PR 2)
 
-- [ ] 2b.1 RED `tests/database/LoginThrottleServiceTest.php::testCountsFailuresInWindowAndAtBoundary` → GREEN `app/Services/LoginThrottleService.php` + 2-line wiring in `AuthService::attempt()`. PROOF: `--filter LoginThrottleServiceTest`.
-- [ ] 2b.2 RED `LoginThrottleServiceTest::testPurgeRemovesOlderThan24hButKeepsWindow` + `::testResetWindowLeavesOlderRows` → GREEN `purge()` before insert; window-scoped `resetWindow()`. PROOF: filter.
-- [ ] 2b.3 RED `AuthTest::testSixthAttemptBlockedEvenWithCorrectPassword` + `::testFailuresOlderThanWindowAllowed` (`Time::setTestNow`) → GREEN block check before lookup. PROOF: `--filter AuthTest`.
-- [ ] 2b.4 RED `tests/unit/AuthLanguageTest.php::testEveryAuthKeyReferencedByIdentifierResolves` (fails: `sessionExpired`, `forbidden` absent) → GREEN add both to `app/Language/es/Auth.php`. PROOF: `--filter AuthLanguageTest`.
+- [x] 2b.1 RED `tests/database/LoginThrottleServiceTest.php::testCountsFailuresInWindowAndAtBoundary` → GREEN `app/Services/LoginThrottleService.php` + 2-line wiring in `AuthService::attempt()`. PROOF: `--filter LoginThrottleServiceTest`.
+- [x] 2b.2 RED `LoginThrottleServiceTest::testPurgeRemovesOlderThan24hButKeepsWindow` + `::testResetWindowLeavesOlderRows` → GREEN `purge()` before insert; window-scoped `resetWindow()`. PROOF: filter.
+- [x] 2b.3 RED `AuthTest::testSixthAttemptBlockedEvenWithCorrectPassword` + `::testFailuresOlderThanWindowAllowed` (`Time::setTestNow`) → GREEN block check before lookup. PROOF: `--filter AuthTest`.
+- [x] 2b.4 RED `tests/unit/AuthLanguageTest.php::testEveryAuthKeyReferencedByIdentifierResolves` (fails: `sessionExpired`, `forbidden` absent) → GREEN add both to `app/Language/es/Auth.php`. PROOF: `--filter AuthLanguageTest`.
 
 ## Group 3 — `feat(auth): gate cashier area by role` (PR 3)
 
