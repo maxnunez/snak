@@ -45,16 +45,16 @@ Later, not here: BOB in `app/Config/Snak.php` (`currencyCode`, `currencySymbol`,
 
 ## Phase 2 — Unit 2: DB-aware `/health` (PR 2, commit 2)
 
-- [ ] 2.1 RED: `tests/feature/HealthTest.php` — GET `/health` 200, `{"status":"ok","db":"ok"}`, `Cache-Control: no-store`. Prove: phpunit fails.
-- [ ] 2.2 GREEN: `app/Controllers/Health.php` (`Database::connect()->query('SELECT 1')` in `try/catch (\Throwable)`, log only) + `app/Config/Routes.php`: `$routes->get('health', 'Health::index')`. Prove: phpunit green.
-- [ ] 2.3 Negative: break `database.default.hostname` in `.env`; GET `/health` → 503 `{"status":"error","db":"error"}`, no DSN/user/password/trace; restore.
-- [ ] 2.4 Commit 2 `feat(health): add DB-aware health endpoint`.
+- [x] 2.1 RED: `tests/feature/HealthTest.php` — GET `/health` 200, `{"status":"ok","db":"ok"}`, `Cache-Control: no-store`. Prove: phpunit fails.
+- [x] 2.2 GREEN: `app/Controllers/Health.php` (`Database::connect()->query('SELECT 1')` in `try/catch (\Throwable)`, log only) + `app/Config/Routes.php`: `$routes->get('health', 'Health::index')`. Prove: phpunit green.
+- [x] 2.3 Negative: break `database.default.hostname` in `.env`; GET `/health` → 503 `{"status":"error","db":"error"}`, no DSN/user/password/trace; restore.
+- [x] 2.4 Commit 2 `feat(health): add DB-aware health endpoint`.
 
 ## Phase 3 — Unit 3: PSR-12 gate (PR 2, commit 3)
 
-- [ ] 3.1 Tooling, no unit test: `composer require --dev friendsofphp/php-cs-fixer:^3.95`; `.php-cs-fixer.dist.php` (`@PSR12`, `app/` + `tests/`, `exclude('app/Views')`); `cs`/`cs:fix` scripts.
-- [ ] 3.2 `composer cs:fix` then `composer cs` exits 0. Prove: exit code.
-- [ ] 3.3 Commit 3 `chore(style): enforce PSR-12 with PHP-CS-Fixer`.
+- [x] 3.1 Tooling, no unit test: `composer require --dev friendsofphp/php-cs-fixer:^3.95`; `.php-cs-fixer.dist.php` (`@PSR12`, `app/` + `tests/`, `exclude('app/Views')`); `cs`/`cs:fix` scripts.
+- [x] 3.2 `composer cs:fix` then `composer cs` exits 0. Prove: exit code.
+- [x] 3.3 Commit 3 `chore(style): enforce PSR-12 with PHP-CS-Fixer`.
 
 ## Phase 4 — Unit 4: base shell, local assets (PR 3, commit 4)
 
