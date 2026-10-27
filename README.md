@@ -32,6 +32,7 @@
 ## 🚀 Características Principales
 
 ### 📦 Gestión de Productos
+
 - **CRUD completo** de productos de snacks
 - **Subida de fotos** con validación MIME y tamaño
 - **Precios en centavos** (sin floating point errors)
@@ -39,6 +40,7 @@
 - **Búsqueda y filtros** para catálogo rápido
 
 ### 📊 Control de Inventario
+
 - **Aumentos de stock auditados** con motivo y usuario
 - **Alertas de bajo stock** automáticas (≤4 items)
 - **Lógica de sellable** (is_active + stock > 0)
@@ -46,12 +48,14 @@
 - **Rollback seguro** de transacciones
 
 ### 👥 Gestión de Usuarios
+
 - **Sistema de roles** (admin + cashier)
 - **Autenticación segura** con sesiones
 - **Gestión de intentos de login fallidos**
 - **Protección por roles** para áreas sensibles
 
 ### 💻 Interfaz de Usuario
+
 - **Diseño responsive** con Bootstrap 4
 - **DataTables** para tablas de datos profesionales
 - **SweetAlert2** para notificaciones elegantes
@@ -62,14 +66,14 @@
 
 ### Tecnologías Utilizadas
 
-| Componente | Versión | Propósito |
-|-------------|--------|----------|
-| **Framework** | CodeIgniter 4 | Backend web PHP |
-| **Base de Datos** | MySQL 8+ | Almacenamiento de datos |
-| **Frontend** | Bootstrap 4 | Diseño de interfaz |
-| **Tablas** | DataTables | Tablas de datos avanzadas |
-| **PHPUnit** | ^10.5.66 | Framework de pruebas |
-| **PHP-CS-Fixer** | ^3.95 | Estilizado de código |
+| Componente        | Versión       | Propósito                 |
+| ----------------- | ------------- | ------------------------- |
+| **Framework**     | CodeIgniter 4 | Backend web PHP           |
+| **Base de Datos** | MySQL 8+      | Almacenamiento de datos   |
+| **Frontend**      | Bootstrap 4   | Diseño de interfaz        |
+| **Tablas**        | DataTables    | Tablas de datos avanzadas |
+| **PHPUnit**       | ^10.5.66      | Framework de pruebas      |
+| **PHP-CS-Fixer**  | ^3.95         | Estilizado de código      |
 
 ### Estructura de Arquitectura
 
@@ -114,6 +118,7 @@ writable/           # Directorios de subida
 ### Pasos de Instalación
 
 1. **Clonar el repositorio** (si es necesario):
+
 ```bash
 git clone https://github.com/maxnunez/snak.git
 snacks
@@ -121,16 +126,19 @@ cd snacks
 ```
 
 2. **Instalar dependencias**:
+
 ```bash
 composer install
 ```
 
 3. **Copiar archivo .env**:
+
 ```bash
 cp .env.example .env
 ```
 
 4. **Configurar base de datos** en `.env`:
+
 ```bash
 database.default.hostname = localhost
 database.default.database = snak
@@ -140,11 +148,13 @@ database.default.DBDriver = MySQLi
 ```
 
 5. **Ejecutar migraciones**:
+
 ```bash
 php spark migrate --all
 ```
 
 6. **Crear usuario admin** (si es necesario):
+
 ```bash
 php spark user:create
 ```
@@ -161,6 +171,7 @@ php spark user:create
 ### Comandos de Pruebas
 
 #### Ejecutar Todas las Pruebas
+
 ```bash
 # En sistemas Unix/macOS
 cd /var/www/html/snak
@@ -171,6 +182,7 @@ vendor\bin\phpunit
 ```
 
 #### Ejecutar Tests Específicos
+
 ```bash
 # Tests de modelos
 cd /var/www/html/snak
@@ -186,12 +198,14 @@ cd /var/www/html/snak
 ```
 
 #### Generar Cobertura de Código
+
 ```bash
 cd /var/www/html/snak
 ./phpunit --colors --coverage-text=tests/coverage.txt --coverage-html=tests/coverage/ -d memory_limit=1024m
 ```
 
 #### Herramientas de Estilizado
+
 ```bash
 # Verificar estilo
 cd /var/www/html/snak
@@ -205,18 +219,21 @@ phpcbf
 ## 🌐 Cómo Iniciar el Servidor Localmente
 
 ### Método 1: Usando Spark
+
 ```bash
 cd /var/www/html/snak
 php spark serve
 ```
 
 ### Método 2: Usando PHP Built-in Server
+
 ```bash
 cd /var/www/html/snak
 php -S localhost:8080 -t public
 ```
 
 ### Método 3: Apache/Nginx
+
 Configure su servidor web para apuntar al directorio `public/`:
 
 ```nginx
@@ -236,6 +253,7 @@ location ~ \.php$ {
 ```
 
 ### URL de Acceso
+
 - **Dashboard**: `http://localhost:8080/`
 - **Panel Admin**: `http://localhost:8080/admin/dashboard`
 - **Panel Cashier**: `http://localhost:8080/cashier`
@@ -243,11 +261,13 @@ location ~ \.php$ {
 ## 🎯 Guía de Inicio Rápido
 
 ### 1. Iniciar Sesión
+
 1. Ir a `http://localhost:8080/`
 2. Ingresar credenciales (contactar al admin para obtener usuario/password)
 3. Acceder al dashboard correspondiente
 
 ### 2. Gestionar Productos
+
 1. Como admin: `/admin/products` o `/cashier`
 2. Hacer clic en "Nuevo Producto"
 3. Llenar formulario con:
@@ -259,12 +279,14 @@ location ~ \.php$ {
 4. Guardar y ver en catálogo
 
 ### 3. Gestionar Inventario
+
 1. Navegar a la pestaña "Stock" o usar endpoint API
 2. Hacer clic en "Aumentar Stock"
 3. Ingresar cantidad y motivo
 4. Sistema crea automáticamente registro de auditoría
 
 ### 4. Verificar Stock Bajo
+
 1. Navegar a "Productos" → Filtro "Stock Bajo"
 2. Sistema muestra productos con ≤4 items
 3. Tomar acción: reposición o pausar
@@ -273,15 +295,15 @@ location ~ \.php$ {
 
 ### Directorios Clave
 
-| Directorio | Contenido | Acceso |
-|------------|----------|--------|
-| `app/Controllers/` | Todos los controladores HTTP | Servidor |
-| `app/Models/` | Modelos con scopes | Servidor |
-| `app/Views/` | Vistas con layouts | Servidor |
-| `app/Language/es/` | Traducciones en español | Servidor |
-| `public/assets/` | CSS/JS/imágenes estáticos | Público |
-| `tests/` | Suite de pruebas completa | CI/CD |
-| `writable/uploads/` | Fotos de productos | Servidor |
+| Directorio          | Contenido                    | Acceso   |
+| ------------------- | ---------------------------- | -------- |
+| `app/Controllers/`  | Todos los controladores HTTP | Servidor |
+| `app/Models/`       | Modelos con scopes           | Servidor |
+| `app/Views/`        | Vistas con layouts           | Servidor |
+| `app/Language/es/`  | Traducciones en español      | Servidor |
+| `public/assets/`    | CSS/JS/imágenes estáticos    | Público  |
+| `tests/`            | Suite de pruebas completa    | CI/CD    |
+| `writable/uploads/` | Fotos de productos           | Servidor |
 
 ### Configuraciones Importantes
 
@@ -296,20 +318,26 @@ location ~ \.php$ {
 
 1. **Fork el repositorio**
 2. **Crear rama para cambios**:
+
 ```bash
 git checkout -b feature/nueva-funcionalidad
 ```
+
 3. **Hacer cambios**
 4. **Probar exhaustivamente**
 5. **Hacer commit de cambios**:
+
 ```bash
 git add .
 git commit -m "feat: nueva funcionalidad"
 ```
+
 6. **Subir cambios**:
+
 ```bash
 git push origin feature/nueva-funcionalidad
 ```
+
 7. **Crear Pull Request**
 
 ### Convenciones de Commit
@@ -355,26 +383,26 @@ name: Integración Continua
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Configurar PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mysqli, gd
-    - name: Instalar dependencias
-      run: composer install --no-interaction --prefer-dist
-    - name: Ejecutar pruebas
-      run: ./phpunit
-    - name: Generar cobertura
-      run: ./phpunit --coverage-text
+      - uses: actions/checkout@v3
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mysqli, gd
+      - name: Instalar dependencias
+        run: composer install --no-interaction --prefer-dist
+      - name: Ejecutar pruebas
+        run: ./phpunit
+      - name: Generar cobertura
+        run: ./phpunit --coverage-text
 ```
 
 ## 📞 Soporte
@@ -423,10 +451,5 @@ Ver LICENSE para más detalles.
 ## ✨ Últimas Actualizaciones
 
 - **Version 1.0.0** - Versión inicial de producción
-- **2024** - Desarrollo activo y pruebas exhaustivas
-- **2025** - Mejoras continuas y optimizaciones
 
----
-
-_Última actualización: $(date +%Y-%m-%d)_
-_Estaré feliz de ayudar con cualquier pregunta o sugerencia!_
+--
