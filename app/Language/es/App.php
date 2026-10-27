@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'appName'   => 'Snak',
-    'homeTitle' => 'Bienvenido a Snak',
-    'welcome'   => 'Sistema de reservas y venta de snacks de la UAB.',
+    'appName' => 'Snack Universitario',
+    'homeTitle' => 'Bienvenido a Snack',
+    'welcome' => 'Sistema de reservas y venta de snacks de la UAB.',
 ];

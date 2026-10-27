@@ -1,26 +1,6 @@
-/* snak theme: primary #003366, black text on white. */
-body {
-    background-color: #ffffff;
-    color: #000000;
-}
+/* snak theme: primary #003366, black text on white — AdminLTE overrides */
 
-a {
-    color: #003366;
-}
-
-a:hover,
-a:focus {
-    color: #002244;
-}
-
-.text-primary {
-    color: #003366 !important;
-}
-
-.bg-primary {
-    background-color: #003366 !important;
-}
-
+/* Override AdminLTE primary color */
 .btn-primary {
     color: #ffffff;
     background-color: #003366;
@@ -53,4 +33,81 @@ a:focus {
     color: #ffffff;
     background-color: #003366;
     border-color: #003366;
+}
+
+.text-primary {
+    color: #003366 !important;
+}
+
+.bg-primary {
+    background-color: #003366 !important;
+}
+
+a {
+    color: #003366;
+}
+
+a:hover,
+a:focus {
+    color: #002244;
+}
+
+/* Custom navbar button style */
+.btn-navbar {
+    color: #ffffff;
+}
+
+.btn-navbar:hover {
+    color: #cccccc;
+}
+
+/* Card shadows */
+.card {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+/* DataTables Bootstrap 4 theme adjustments */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* SweetAlert2 primary color */
+.swal2-confirm {
+    background-color: #003366 !important;
+}
+
+/* AdminLTE card header */
+.card-header {
+    border-bottom: 2px solid #003366;
+}
+
+/* Sticky cart sidebar */
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+/* Badge fixes */
+.badge {
+    font-weight: 500;
+}
+
+/* DataTables empty row styling */
+tr[data-tableempty="true"] td {
+    text-align: center !important;
+    padding: 2rem 1rem !important;
+    color: #6c757d !important;
+}
+tr[data-tableempty="true"] {
+    background-color: #f8f9fa;
+}
+
+/* Padding de 15px en celdas de tablas de datos */
+.table td,
+.table th {
+    padding: 15px !important;
 }

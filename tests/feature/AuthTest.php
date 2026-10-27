@@ -32,8 +32,13 @@ final class AuthTest extends CIUnitTestCase
     {
         parent::setUp();
 
+        // Disable FK checks, truncate, re-enable
+        $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+        $this->db->table('sale_items')->truncate();
+        $this->db->table('sales')->truncate();
         $this->db->table('login_attempts')->truncate();
         $this->db->table('users')->truncate();
+        $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
 
         $_SESSION = [];
         service('superglobals')->setServer('REMOTE_ADDR', '127.0.0.1');

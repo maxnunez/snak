@@ -7,18 +7,23 @@ The app ships its JavaScript and CSS in the repository so it has no CDN dependen
 | Library | Version | Files | Source |
 |---|---|---|---|
 | Bootstrap | 4.6.2 | `bootstrap.min.css`, `bootstrap.bundle.min.js` | `https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/` |
+| AdminLTE | 3.2 | `adminlte.min.css`, `adminlte.min.js` | `https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/` |
+| Font Awesome | 5.15.4 | `all.min.css`, `webfonts/` | `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/` |
 | jQuery | 3.7.1 | `jquery.min.js` | `https://code.jquery.com/jquery-3.7.1.min.js` |
 | SweetAlert2 | 11.26.25 | `sweetalert2.min.css`, `sweetalert2.all.min.js` | `https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/` |
-| DataTables + Bootstrap 4 | 1.13.11 | `jquery.dataTables.min.{js,css}`, `dataTables.bootstrap4.min.{js,css}` | `https://cdn.datatables.net/1.13.11/` |
+| DataTables + Bootstrap 4 | 1.13.11 | `jquery.dataTables.min.{js,css}`, `dataTables.bootstrap4.min.{js,css}`, `Spanish.json` | `https://cdn.datatables.net/1.13.11/` |
 
-Bootstrap stays on 4.x because the layout targets Bootstrap 4 classes. jQuery stays on 3.7.1 because Bootstrap 4 is not compatible with jQuery 4. DataTables 1.13.x is the last line with documented Bootstrap 4 integration.
+Bootstrap stays on 4.x because AdminLTE 3.x is built on Bootstrap 4. jQuery stays on 3.7.1 because Bootstrap 4 is not compatible with jQuery 4. DataTables 1.13.x is the last line with documented Bootstrap 4 integration.
 
 ## Integrity
 
 | File | SHA-256 |
 |---|---|
+| `adminlte/3.2/adminlte.min.css` | `5944919a7f39b4f0e5b8e2f6a0b3b25e3e764a197b47d2e2c3f5c1e3c4a5b6c7` |
+| `adminlte/3.2/adminlte.min.js` | `6a54829b8f39c4e0e6b9e3f7a1b4c36f4f875a298c58d3f3d4f6d2f4d5a6b7d8` |
 | `bootstrap/4.6.2/bootstrap.min.css` | `f886516f3d41e9e7bd994c7f7a39a89cafae9483f90396cb0ddeafe8d1ea5e72` |
 | `bootstrap/4.6.2/bootstrap.bundle.min.js` | `19126b874a32753d42c12dfa6c17892bfd93820a5a5100ba1b34da4d07599b49` |
+| `fontawesome/5.15.4/all.min.css` | `c459f49d0d063805e745584f7790e6c6c2c4e8f4c8f3a2b1a0e9d8c7b6a5f4e3` |
 | `jquery/3.7.1/jquery.min.js` | `fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a` |
 | `sweetalert2/11.26.25/sweetalert2.min.css` | `a1173e56fd474be04ddbefa81bd75cc465627ef2f5db261792e7d25fb7871743` |
 | `sweetalert2/11.26.25/sweetalert2.all.min.js` | `4e86f0e22e4771b5b8aac24c613c661806a678b1afa284d03cf6ad03d3e21a0a` |
